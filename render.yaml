@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: myg-suscripcion
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DB_DRIVER
+        value: sqlite
+      - key: APP_NAME
+        value: MYG - Suscripción de Entretenimiento
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: SESSION_NAME
+        value: MYG_session

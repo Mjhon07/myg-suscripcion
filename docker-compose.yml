@@ -22,6 +22,7 @@ services:
     ports:
       - "8080:80"
     environment:
+      DB_DRIVER: mysql
       DB_HOST: db
       DB_PORT: "3306"
       DB_NAME: myg_db
@@ -32,6 +33,7 @@ services:
       APP_DEBUG: "false"
       APP_URL: http://localhost:8080
       SESSION_NAME: MYG_session
+
     depends_on:
       db:
         condition: service_healthy

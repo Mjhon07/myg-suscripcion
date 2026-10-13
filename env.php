@@ -106,8 +106,8 @@ if (!function_exists('sincronizarEnvSistema')) {
 
 // Docker / hosting: tomar primero variables del entorno del proceso
 sincronizarEnvSistema([
-    'DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD',
-    'APP_NAME', 'APP_ENV', 'APP_DEBUG', 'APP_URL', 'SESSION_NAME',
+    'DB_DRIVER', 'DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD',
+    'DB_SQLITE_PATH', 'APP_NAME', 'APP_ENV', 'APP_DEBUG', 'APP_URL', 'SESSION_NAME',
 ]);
 
 // Luego completar con archivo .env si existe (sin pisar las del sistema)

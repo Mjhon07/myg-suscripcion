@@ -4,6 +4,11 @@
 .env.*.local
 .env.infinityfree
 
+# SQLite (Render / local)
+/data/
+*.sqlite
+*.sqlite3
+
 # Logs y depuración
 *.log
 logs/
