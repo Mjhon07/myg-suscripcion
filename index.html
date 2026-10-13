@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYG - Suscripción de Películas, Series y Juegos</title>
+    <meta name="description" content="MYG: una sola suscripción para películas, series y juegos. Entretenimiento digital sin límites.">
+    <meta name="author" content="MYG Entertainment">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <ion-icon name="play-circle"></ion-icon>
+                </div>
+                <span>MYG</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                <li><a href="#beneficios" class="nav-link">Beneficios</a></li>
+                <li><a href="#catalogo" class="nav-link">Planes</a></li>
+                <li><a href="#contenido" class="nav-link">Contenido</a></li>
+                <li><a href="#testimonios" class="nav-link">Testimonios</a></li>
+                <li><a href="#faq" class="nav-link">Preguntas</a></li>
+                <li><a href="#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="header-search">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <input type="text" id="header-search-input" placeholder="Buscar plan o título..." autocomplete="off">
+                </div>
+
+                <button type="button" id="btn-open-cart" class="btn-icon-nav" aria-label="Abrir carrito de suscripción" title="Ver planes">
+                    <ion-icon name="cart-outline"></ion-icon>
+                    <span id="cart-badge" class="cart-badge">0</span>
+                </button>
+
+                <a href="clientes/login.html" class="btn-icon-nav btn-profile" aria-label="Acceso al panel administrativo" title="Panel de Administración">
+                    <ion-icon name="person-circle-outline"></ion-icon>
+                </a>
+
+                <button type="button" class="btn-hamburger" aria-label="Abrir menú de navegación">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="nav-overlay"></div>
+
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+
+    <aside id="cart-drawer" class="cart-drawer">
+        <div class="drawer-header">
+            <div class="drawer-title">
+                <ion-icon name="ribbon-outline"></ion-icon>
+                <span>Tu Suscripción</span>
+            </div>
+            <button type="button" id="btn-close-drawer" class="btn-close-drawer" aria-label="Cerrar carrito">&times;</button>
+        </div>
+
+        <div class="drawer-body">
+            <div id="empty-cart-message" style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+                <ion-icon name="ticket-outline" style="font-size: 3.5rem; color: var(--cyan); margin-bottom: 0.8rem;"></ion-icon>
+                <h4 style="color: #fff; margin-bottom: 0.4rem;">Aún no elegiste un plan</h4>
+                <p style="font-size: 0.9rem;">Escoge un plan de películas, series y juegos para continuar.</p>
+            </div>
+
+            <div id="cart-items-container" class="cart-items-container"></div>
+
+            <div id="checkout-drawer-section" style="display: none;">
+                <div class="cart-breakdown">
+                    <div class="breakdown-row">
+                        <span>Subtotal mensual:</span>
+                        <strong id="cart-subtotal" style="color: #fff;">$ 0 COP</strong>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>Entrega:</span>
+                        <span id="cart-shipping" style="color: var(--emerald); font-weight: 600;">Acceso digital</span>
+                    </div>
+                    <div class="breakdown-row total-row">
+                        <span>Total a pagar:</span>
+                        <span id="cart-total">$ 0 COP</span>
+                    </div>
+                </div>
+
+                <div class="checkout-drawer-box" style="margin-top: 1.5rem;">
+                    <div class="checkout-box-title">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <span>Datos del suscriptor</span>
+                    </div>
+
+                    <form id="form-drawer-checkout">
+                        <div class="form-group">
+                            <label for="checkout_cedula">Cédula / Identificación *</label>
+                            <input type="text" id="checkout_cedula" class="form-control" placeholder="Ej: 1098765432" required autocomplete="off">
+                            <div id="checkout_cedula_status" class="cedula-lookup-badge" style="display: none;"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_nombre">Nombre Completo *</label>
+                            <input type="text" id="checkout_nombre" class="form-control" placeholder="Tu nombre" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_email">Correo Electrónico *</label>
+                            <input type="email" id="checkout_email" class="form-control" placeholder="tu@correo.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="checkout_telefono">Teléfono / Celular</label>
+                            <input type="tel" id="checkout_telefono" class="form-control" placeholder="+57 300 123 4567">
+                        </div>
+
+                        <div class="form-group" style="display: none;">
+                            <label for="checkout_direccion">Dirección</label>
+                            <input type="text" id="checkout_direccion" class="form-control" placeholder="Opcional">
+                        </div>
+
+                        <div class="pago-sim-box">
+                            <div class="checkout-box-title">
+                                <ion-icon name="card-outline"></ion-icon>
+                                <span>Pasarela MYG Pay (simulada)</span>
+                            </div>
+                            <p class="pago-sim-hint">Solo demostración. No se conecta a bancos ni guarda datos reales.</p>
+                            <p class="pago-sim-hint">Tarjeta de prueba: <strong>4242 4242 4242 4242</strong> · MM/AA · CVV cualquiera. Si termina en <strong>0000</strong>, se rechaza.</p>
+
+                            <div class="form-group">
+                                <label for="pago_titular">Titular de la tarjeta *</label>
+                                <input type="text" id="pago_titular" class="form-control" placeholder="Como aparece en la tarjeta" autocomplete="off" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pago_numero">Número de tarjeta *</label>
+                                <input type="text" id="pago_numero" class="form-control" placeholder="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="off" required>
+                            </div>
+
+                            <div class="pago-sim-row">
+                                <div class="form-group">
+                                    <label for="pago_vencimiento">Vence *</label>
+                                    <input type="text" id="pago_vencimiento" class="form-control" placeholder="MM/AA" inputmode="numeric" autocomplete="off" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pago_cvv">CVV *</label>
+                                    <input type="password" id="pago_cvv" class="form-control" placeholder="***" inputmode="numeric" autocomplete="off" required>
+                                </div>
+                            </div>
+
+                            <div id="pago-sim-status" class="pago-sim-status" style="display: none;"></div>
+                        </div>
+
+                        <button type="submit" id="btn-confirm-order" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                            Pagar y Activar Suscripción
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <header id="inicio" class="hero-slider-section">
+        <div class="slider-container">
+            <div class="slide active">
+                <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=1920&q=80');"></div>
+                <div class="container">
+                    <div class="slide-content">
+                        <span class="slide-tag">Una sola suscripción</span>
+                        <h1 class="slide-title">Películas, Series y Juegos en un solo lugar</h1>
+                        <p class="slide-desc">MYG concentra tu entretenimiento digital: estrenos, temporadas completas y catálogo gamer sin comprar hardware.</p>
+                        <div class="slide-actions">
+                            <a href="#catalogo" class="btn btn-primary">
+                                <ion-icon name="rocket-outline"></ion-icon>
+                                Ver Planes
+                            </a>
+                            <a href="#contenido" class="btn btn-outline">
+                                <ion-icon name="play-outline"></ion-icon>
+                                Explorar Contenido
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1920&q=80');"></div>
+                <div class="container">
+                    <div class="slide-content">
+                        <span class="slide-tag" style="background: rgba(255, 0, 127, 0.3); border-color: rgba(255, 0, 127, 0.6); color: #fda4af;">Cine & Series</span>
+                        <h1 class="slide-title">Estrenos y series para maratonear</h1>
+                        <p class="slide-desc">Catálogo en HD y 4K según tu plan. Cancela cuando quieras; tu acceso es 100% digital.</p>
+                        <div class="slide-actions">
+                            <a href="#catalogo" class="btn btn-primary">
+                                <ion-icon name="film-outline"></ion-icon>
+                                Elegir Plan
+                            </a>
+                            <a href="#faq" class="btn btn-outline">
+                                <ion-icon name="help-circle-outline"></ion-icon>
+                                Cómo funciona
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80');"></div>
+                <div class="container">
+                    <div class="slide-content">
+                        <span class="slide-tag" style="background: rgba(0, 242, 254, 0.2); border-color: rgba(0, 242, 254, 0.5); color: #67e8f9;">Gaming cloud</span>
+                        <h1 class="slide-title">Juegos incluidos en tu membresía</h1>
+                        <p class="slide-desc">Desde indies hasta títulos AAA en el plan Ultra. Sin consolas: solo suscripción y disfruta.</p>
+                        <div class="slide-actions">
+                            <a href="#catalogo" class="btn btn-primary">
+                                <ion-icon name="game-controller-outline"></ion-icon>
+                                Plan Ultra
+                            </a>
+                            <a href="#contacto" class="btn btn-outline">
+                                <ion-icon name="chatbubbles-outline"></ion-icon>
+                                Hablar con soporte
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="slider-btn prev" aria-label="Slide anterior">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
+            <button class="slider-btn next" aria-label="Slide siguiente">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+
+            <div class="slider-dots">
+                <button class="dot active" aria-label="Diapositiva 1"></button>
+                <button class="dot" aria-label="Diapositiva 2"></button>
+                <button class="dot" aria-label="Diapositiva 3"></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="section" style="padding-bottom: 2rem;">
+        <div class="container">
+            <div class="admin-callout reveal" style="text-align: center; padding: 3.5rem 2rem;">
+                <span class="section-tag" style="background: rgba(0, 242, 254, 0.15); color: var(--cyan);">Nuestra promesa</span>
+                <h2 style="font-family: var(--font-heading); font-size: 2.3rem; color: #fff; margin: 1rem auto; max-width: 750px; line-height: 1.2;">
+                    Una membresía. Todo el entretenimiento que importa.
+                </h2>
+                <p style="color: var(--text-muted); max-width: 680px; margin: 0 auto 1.5rem; font-size: 1.05rem;">
+                    MYG unifica películas, series y juegos en una suscripción mensual. Sin venta de consolas ni hardware: solo acceso digital al contenido que quieres ver y jugar.
+                </p>
+                <a href="#catalogo" class="btn btn-primary">
+                    <ion-icon name="ticket-outline"></ion-icon>
+                    Suscribirme ahora
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="beneficios" class="section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">¿Por qué MYG?</span>
+                <h2 class="section-title">Beneficios de tu suscripción</h2>
+                <p class="section-subtitle">Diseñado para quienes quieren cine, series y juegos sin fragmentar su presupuesto.</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><ion-icon name="layers-outline"></ion-icon></div>
+                    <div class="benefit-info">
+                        <h3>Todo en un plan</h3>
+                        <p>Películas, series y juegos bajo la misma membresía. Escoge el nivel que se adapte a ti.</p>
+                    </div>
+                </div>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><ion-icon name="cloud-done-outline"></ion-icon></div>
+                    <div class="benefit-info">
+                        <h3>100% digital</h3>
+                        <p>Activa al instante tras el pago simulado. Sin envíos, sin consolas, sin esperas.</p>
+                    </div>
+                </div>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><ion-icon name="sparkles-outline"></ion-icon></div>
+                    <div class="benefit-info">
+                        <h3>Catálogo rotativo</h3>
+                        <p>Estrenos y temporadas nuevas cada mes según tu plan: Básico, Plus o Ultra.</p>
+                    </div>
+                </div>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><ion-icon name="headset-outline"></ion-icon></div>
+                    <div class="benefit-info">
+                        <h3>Soporte 24/7</h3>
+                        <p>Ayuda para activar tu cuenta, cambiar de plan o resolver dudas de reproducción.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="catalogo" class="section" style="background: rgba(15, 23, 42, 0.4);">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Membresías</span>
+                <h2 class="section-title">Planes de suscripción</h2>
+                <p class="section-subtitle">Elige tu plan y actívalo desde el carrito con la pasarela simulada.</p>
+            </div>
+
+            <div class="catalog-search-wrap reveal">
+                <ion-icon name="search-outline" class="catalog-search-icon"></ion-icon>
+                <input type="text" id="catalog-search-input" class="catalog-search-input" placeholder="Buscar plan: básico, plus, ultra, juegos..." autocomplete="off">
+            </div>
+
+            <div class="catalog-filters reveal">
+                <button type="button" class="filter-btn active" data-filter="todos">Todos</button>
+                <button type="button" class="filter-btn" data-filter="planes">Planes</button>
+                <button type="button" class="filter-btn" data-filter="peliculas">Películas</button>
+                <button type="button" class="filter-btn" data-filter="series">Series</button>
+                <button type="button" class="filter-btn" data-filter="juegos">Juegos</button>
+            </div>
+
+            <div class="products-grid">
+                <div class="product-card reveal" data-category="planes">
+                    <div class="product-thumb">
+                        <span class="stock-badge stock-in">Popular</span>
+                        <span class="product-tag tag-game">Plan Básico</span>
+                        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=600&q=80" alt="Plan Básico MYG">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-rating">
+                            <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star-half"></ion-icon>
+                            <span>(4.6)</span>
+                        </div>
+                        <h3 class="product-title">MYG Básico</h3>
+                        <p class="product-desc">Películas HD y series seleccionadas. Ideal para empezar sin complicaciones.</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-currency">COP / mes</span>
+                                <span class="price-amount">$ 29.900</span>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-add-cart"
+                                data-id="plan-basico"
+                                data-name="MYG Básico (mensual)"
+                                data-price="29900"
+                                data-image="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=600&q=80">
+                                <ion-icon name="cart-outline"></ion-icon>
+                                Suscribirme
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-category="planes">
+                    <div class="product-thumb">
+                        <span class="stock-badge stock-in">Recomendado</span>
+                        <span class="product-tag tag-movie">Plan Plus</span>
+                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80" alt="Plan Plus MYG">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-rating">
+                            <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                            <span>(4.9)</span>
+                        </div>
+                        <h3 class="product-title">MYG Plus</h3>
+                        <p class="product-desc">Películas 4K, series completas y biblioteca de juegos casuales e indies.</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-currency">COP / mes</span>
+                                <span class="price-amount">$ 49.900</span>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-add-cart"
+                                data-id="plan-plus"
+                                data-name="MYG Plus (mensual)"
+                                data-price="49900"
+                                data-image="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80">
+                                <ion-icon name="cart-outline"></ion-icon>
+                                Suscribirme
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-category="planes">
+                    <div class="product-thumb">
+                        <span class="stock-badge stock-pre">Todo incluido</span>
+                        <span class="product-tag tag-console">Plan Ultra</span>
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" alt="Plan Ultra MYG">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-rating">
+                            <ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon><ion-icon name="star"></ion-icon>
+                            <span>(5.0)</span>
+                        </div>
+                        <h3 class="product-title">MYG Ultra</h3>
+                        <p class="product-desc">Acceso total: cine 4K, series exclusivas y juegos AAA en la nube. Multi-dispositivo.</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-currency">COP / mes</span>
+                                <span class="price-amount">$ 79.900</span>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-add-cart"
+                                data-id="plan-ultra"
+                                data-name="MYG Ultra (mensual)"
+                                data-price="79900"
+                                data-image="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80">
+                                <ion-icon name="cart-outline"></ion-icon>
+                                Suscribirme
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-category="peliculas">
+                    <div class="product-thumb">
+                        <span class="stock-badge stock-in">Incluido Plus+</span>
+                        <span class="product-tag tag-movie">Película</span>
+                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80" alt="Estrenos cine">
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Estrenos de cine en streaming</h3>
+                        <p class="product-desc">Bloque destacado de películas. Incluido desde Plan Plus. Activa un plan para verlo.</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-currency">Desde</span>
+                                <span class="price-amount">Plan Plus</span>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-add-cart"
+                                data-id="plan-plus"
+                                data-name="MYG Plus (mensual)"
+                                data-price="49900"
+                                data-image="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80">
+                                <ion-icon name="ticket-outline"></ion-icon>
+                                Activar Plus
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-category="series">
+                    <div class="product-thumb">
+                        <span class="stock-badge stock-in">Incluido</span>
+                        <span class="product-tag tag-movie">Serie</span>
+                        <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&w=600&q=80" alt="Series MYG">
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Series y temporadas completas</h3>
+                        <p class="product-desc">Maratones y episodios semanales. Disponible desde el Plan Básico.</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-currency">Desde</span>
+                                <span class="price-amount">Plan Básico</span>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-add-cart"
+                                data-id="plan-basico"
+                                data-name="MYG Básico (mensual)"
+                                data-price="29900"
+                                data-image="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&w=600&q=80">
+                                <ion-icon name="ticket-outline"></ion-icon>
+                                Activar Básico
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-category="juegos">
+                    <div class="product-thumb">
+                        <span class="stock-badge stock-pre">Ultra</span>
+                        <span class="product-tag tag-game">Juegos</span>
+                        <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80" alt="Juegos MYG">
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">Biblioteca de juegos en la nube</h3>
+                        <p class="product-desc">Catálogo gamer completo con AAA en Ultra. Sin consolas ni discos físicos.</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-currency">Desde</span>
+                                <span class="price-amount">Plan Ultra</span>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-add-cart"
+                                data-id="plan-ultra"
+                                data-name="MYG Ultra (mensual)"
+                                data-price="79900"
+                                data-image="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80">
+                                <ion-icon name="ticket-outline"></ion-icon>
+                                Activar Ultra
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contenido" class="section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Dentro de MYG</span>
+                <h2 class="section-title">Qué incluye tu membresía</h2>
+                <p class="section-subtitle">Tres universos de entretenimiento, cero venta de hardware.</p>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><ion-icon name="film-outline"></ion-icon></div>
+                    <div class="benefit-info">
+                        <h3>Películas</h3>
+                        <p>Estrenos y clásicos en HD o 4K según el plan. Listas curadas cada semana.</p>
+                    </div>
+                </div>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><ion-icon name="tv-outline"></ion-icon></div>
+                    <div class="benefit-info">
+                        <h3>Series</h3>
+                        <p>Temporadas completas, episodios nuevos y recomendaciones personalizadas.</p>
+                    </div>
+                </div>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon"><ion-icon name="game-controller-outline"></ion-icon></div>
+                    <div class="benefit-info">
+                        <h3>Juegos</h3>
+                        <p>Catálogo digital en la nube. Plus incluye indies; Ultra suma AAA.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonios" class="section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Comunidad</span>
+                <h2 class="section-title">Lo que dicen los suscriptores</h2>
+                <p class="section-subtitle">Personas que unificaron su entretenimiento con MYG.</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-quote">
+                        "Pasé de pagar tres apps distintas a un solo plan Plus. Series y películas en 4K, y de vez en cuando un indie. Perfecto."
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" alt="Andrés R." class="author-avatar">
+                        <div class="author-info">
+                            <h4>Andrés Restrepo</h4>
+                            <span>Plan Plus</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-quote">
+                        "El Ultra me alcanza para juegos AAA sin consola. El checkout con la pasarela simulada del demo es clarísimo."
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80" alt="Valeria M." class="author-avatar">
+                        <div class="author-info">
+                            <h4>Valeria Mendoza</h4>
+                            <span>Plan Ultra</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-quote">
+                        "Empecé con Básico solo por series y luego subí de plan en un clic. Sin envíos ni productos físicos: justo lo que buscaba."
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80" alt="Camilo D." class="author-avatar">
+                        <div class="author-info">
+                            <h4>Camilo Díaz</h4>
+                            <span>Plan Básico</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="section" style="background: rgba(15, 23, 42, 0.4);">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">FAQ</span>
+                <h2 class="section-title">Preguntas frecuentes</h2>
+                <p class="section-subtitle">Todo sobre la suscripción y el pago simulado.</p>
+            </div>
+
+            <div class="faq-accordion reveal">
+                <div class="faq-item active">
+                    <button type="button" class="faq-header">
+                        <span>¿Qué es MYG?</span>
+                        <ion-icon name="chevron-down-outline" class="faq-icon"></ion-icon>
+                    </button>
+                    <div class="faq-body" style="max-height: 200px;">
+                        <p>MYG es una plataforma de suscripción digital donde, con un solo plan, accedes a películas, series y juegos en streaming según el nivel que elijas (Básico, Plus o Ultra).</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button type="button" class="faq-header">
+                        <span>¿Cómo activo mi plan?</span>
+                        <ion-icon name="chevron-down-outline" class="faq-icon"></ion-icon>
+                    </button>
+                    <div class="faq-body">
+                        <p>Elige un plan, completa tus datos en el carrito y paga con la pasarela simulada MYG Pay. Al aprobarse, tu suscripción queda registrada en el sistema.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button type="button" class="faq-header">
+                        <span>¿La pasarela de pago es real?</span>
+                        <ion-icon name="chevron-down-outline" class="faq-icon"></ion-icon>
+                    </button>
+                    <div class="faq-body">
+                        <p>No. Es una simulación educativa: no envía datos a bancos ni procesadores externos. Usa la tarjeta de prueba 4242… o cualquier número válido en formato; si termina en 0000, el pago se rechaza a propósito.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button type="button" class="faq-header">
+                        <span>¿Qué diferencia hay entre Básico, Plus y Ultra?</span>
+                        <ion-icon name="chevron-down-outline" class="faq-icon"></ion-icon>
+                    </button>
+                    <div class="faq-body">
+                        <p>Básico: películas HD y series. Plus: 4K + juegos casuales. Ultra: catálogo completo incluyendo juegos AAA y multi-dispositivo.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button type="button" class="faq-header">
+                        <span>¿Puedo cambiar de plan después?</span>
+                        <ion-icon name="chevron-down-outline" class="faq-icon"></ion-icon>
+                    </button>
+                    <div class="faq-body">
+                        <p>Sí. Puedes volver a suscribirte a otro plan desde el catálogo. En producción real se gestionarían upgrades; aquí cada checkout registra una nueva suscripción.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto" class="section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">Contáctanos</span>
+                <h2 class="section-title">¿Necesitas ayuda con tu plan?</h2>
+                <p class="section-subtitle">Escríbenos y te respondemos sobre tu suscripción.</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info-cards reveal">
+                    <div class="contact-card">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <div>
+                            <h4>Correo</h4>
+                            <p>soporte@myg.stream / hola@myg.stream</p>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <ion-icon name="call-outline"></ion-icon>
+                        <div>
+                            <h4>Línea & WhatsApp</h4>
+                            <p>+57 (300) 987-6543</p>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <ion-icon name="time-outline"></ion-icon>
+                        <div>
+                            <h4>Horario</h4>
+                            <p>Lunes a Domingo: 8:00 AM - 10:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <ion-icon name="globe-outline"></ion-icon>
+                        <div>
+                            <h4>Servicio</h4>
+                            <p>Streaming digital · Sin tienda física de hardware</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-container reveal">
+                    <form id="form-contacto">
+                        <div class="form-group">
+                            <label for="contacto_nombre">Nombre Completo *</label>
+                            <input type="text" id="contacto_nombre" class="form-control" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contacto_email">Correo Electrónico *</label>
+                            <input type="email" id="contacto_email" class="form-control" placeholder="tu@correo.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contacto_mensaje">Mensaje *</label>
+                            <textarea id="contacto_mensaje" class="form-control" placeholder="Cuéntanos sobre tu plan o duda" required></textarea>
+                        </div>
+                        <button type="submit" id="btn-submit-contacto" class="btn btn-primary" style="width: 100%;">
+                            <ion-icon name="paper-plane-outline"></ion-icon>
+                            Enviar Mensaje
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <div class="logo-icon"><ion-icon name="play-circle"></ion-icon></div>
+                        <span>MYG</span>
+                    </a>
+                    <p>Suscripción digital de entretenimiento: películas, series y juegos. Sin consolas.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn" aria-label="Facebook"><ion-icon name="logo-facebook"></ion-icon></a>
+                        <a href="#" class="social-btn" aria-label="Instagram"><ion-icon name="logo-instagram"></ion-icon></a>
+                        <a href="#" class="social-btn" aria-label="Twitter"><ion-icon name="logo-twitter"></ion-icon></a>
+                        <a href="#" class="social-btn" aria-label="Discord"><ion-icon name="logo-discord"></ion-icon></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Navegación</h4>
+                    <ul class="footer-links">
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#catalogo">Planes</a></li>
+                        <li><a href="#contenido">Contenido</a></li>
+                        <li><a href="#faq">Preguntas</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="trigger-privacy">Privacidad</a></li>
+                        <li><a href="#" class="trigger-privacy">Términos</a></li>
+                        <li><a href="#contacto">Soporte</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Administración</h4>
+                    <ul class="footer-links">
+                        <li><a href="clientes/login.html">Iniciar Sesión</a></li>
+                        <li><a href="clientes/index.php">Panel de Control</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 MYG Entertainment. Suscripción digital de entretenimiento.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
+        <ion-icon name="arrow-up-outline"></ion-icon>
+    </button>
+
+    <div id="modal-privacy" class="modal-overlay">
+        <div class="privacy-modal-box">
+            <button type="button" class="modal-close close-privacy">&times;</button>
+            <h3>Privacidad y términos de suscripción</h3>
+            <h4>1. Datos del suscriptor</h4>
+            <p>Usamos nombre, cédula, correo y teléfono para gestionar tu membresía y soporte. No vendemos consolas ni realizamos envíos físicos.</p>
+            <h4>2. Pasarela simulada</h4>
+            <p>Los campos de tarjeta son solo demostración. No se envían a procesadores de pago reales ni se almacenan números completos de tarjeta.</p>
+            <h4>3. Acceso digital</h4>
+            <p>La suscripción otorga acceso al catálogo según el plan contratado (Básico, Plus o Ultra).</p>
+            <button type="button" class="btn btn-primary close-privacy" style="width: 100%; margin-top: 1.5rem;">
+                Entendido
+            </button>
+        </div>
+    </div>
+
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

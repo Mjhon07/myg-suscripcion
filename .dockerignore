@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.env.local
+*.log
+logs/
+tmp/
+temp/
+README*
+LICENSE*
+docker-compose.override.yml

@@ -1,0 +1,33 @@
+# Variables de entorno y credenciales sensibles
+.env
+.env.local
+.env.*.local
+.env.infinityfree
+
+# Logs y depuración
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+
+# Archivos de sesión y temporales
+sess_*
+tmp/
+temp/
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Copias de seguridad y volcados locales
+*.sql.bak
+*.bak
+*.swp
+*~
+
+# IDEs y editores
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project

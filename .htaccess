@@ -1,0 +1,37 @@
+# ==============================================================================
+# MYG - Configuración de Seguridad y Control de Acceso Apache (.htaccess)
+# ==============================================================================
+
+# 1. Deshabilitar listado de directorios
+Options -Indexes
+
+# 2. Definir archivos índice predeterminados
+DirectoryIndex index.html index.php
+
+# 3. Bloquear acceso directo a archivos sensibles y de configuración
+<FilesMatch "^(\.env|\.env\.example|\.git|\.dockerignore|env\.php|conexion\.php|auth\.php|.*\.sql)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 4. Cabeceras HTTP de Seguridad
+<IfModule mod_headers.c>
+    # Prevenir clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # Prevenir MIME-sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    # Habilitar filtro XSS en navegadores compatibles
+    Header always set X-XSS-Protection "1; mode=block"
+    # Política de referer estricta
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # Política de permisos básicos
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# 5. Charset predeterminado UTF-8
+AddDefaultCharset UTF-8
